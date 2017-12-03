@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Libraries
+lib-projs/Assembly-CSharp.dll
+lib-projs/Assembly-CSharp-firstpass.dll
+lib-projs/UnityEngine.dll
+
 # User-specific files
 *.suo
 *.user
