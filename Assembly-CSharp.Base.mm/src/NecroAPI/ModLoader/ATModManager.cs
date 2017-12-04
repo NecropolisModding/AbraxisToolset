@@ -68,15 +68,15 @@ namespace AbraxisToolset.ModLoader {
                         ReflectionUtil.BindMembersByReflection( globalBindings, classType, null, ReflectionUtil.CaseMode.ForceLowercase );
                     }
 
-                    foreach(ATMod mod in loadedMods ) {
-                        mod.OnLoad();
-                    }
-
                     DebugConsole.Log( globalBindings.Count + " global bindings" );
                 } catch( System.Exception e ) {
                     Debug.Log( e );
                 }
 
+            }
+
+            foreach( ATMod mod in loadedMods ) {
+                mod.OnLoad();
             }
 
 
