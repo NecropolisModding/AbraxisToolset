@@ -15,6 +15,7 @@ namespace AbraxisToolset.ModLoader {
     public class ATModManager {
 
         public const string MOD_DATA_PATH = "/mods";
+        public static List<ATMod> loadedMods = new List<ATMod>();
 
         public static void LoadMods() {
 
@@ -60,11 +61,15 @@ namespace AbraxisToolset.ModLoader {
                             //Create the mod and call Init() and OnLoad()
                             ATMod mod = (ATMod)Activator.CreateInstance( classType );
                             mod.Init();
-                            mod.OnLoad();
+                            loadedMods.Add(mod);
                         }
 
                         DebugConsole.Log( "Binding class " + classType.Name );
                         ReflectionUtil.BindMembersByReflection( globalBindings, classType, null, ReflectionUtil.CaseMode.ForceLowercase );
+                    }
+
+                    foreach(ATMod mod in loadedMods ) {
+                        mod.OnLoad();
                     }
 
                     DebugConsole.Log( globalBindings.Count + " global bindings" );

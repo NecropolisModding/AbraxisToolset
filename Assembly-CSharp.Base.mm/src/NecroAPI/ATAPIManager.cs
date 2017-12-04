@@ -47,6 +47,14 @@ namespace AbraxisToolset {
 
             }
 
+            foreach(ATMod mod in ATModManager.loadedMods ) {
+                try {
+                    mod.Update();
+                } catch (System.Exception e ) {
+                    Debug.LogError( e );
+                }
+            }
+
         }
 
         public void OnGUI() {
