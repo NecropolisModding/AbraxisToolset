@@ -1,6 +1,7 @@
 # AbraxisToolset
 The base toolset for the game, which includes a mod loader and a few other bits and pieces.
 
+Feel free to support me and my projects on [my Patreon](https://www.patreon.com/zerndererer). I have no plans to continue development on this specific project, for now.
 
 # Setup
 
