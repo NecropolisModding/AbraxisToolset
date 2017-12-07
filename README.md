@@ -12,11 +12,13 @@ Normally, when adding new stuff, you won't need to patch the game, so it's a bet
 
 **Step 2** : Make a new C# project, set it to build as a .dll (Class Library (.NET framework) for Visual Studio)
 
-**Step 3** : Add the patched game as a reference ([Necropolis Folder]/Necropolis_Data/Managed/ is the folder you want to look for, Assembly-CSharp.dll is the Necropolis code, UnityEngine.dll is the Unity Engine, and the others are just whatever they are.)
+**Step 3** : MAKE SURE the C# project's .net target version is 2.5 or 3. (In Visual Studio, Project > Project Properties (At the bottom) > Target Framework)
 
-**Step 4** : Create your mod from there! If you're using AbraxisToolset, any class that inherits from AbraxisToolset.ATMod has a few functions that call (Init will call before anything else, OnLoad will call once all other Init's have been called, Update will call every frame.)
+**Step 4** : Add the patched game as a reference ([Necropolis Folder]/Necropolis_Data/Managed/ is the folder you want to look for, Assembly-CSharp.dll is the Necropolis code, UnityEngine.dll is the Unity Engine, and the others are just whatever they are.)
 
-**Step 5** : Build your mod once finished, and just copy it to the "mods" folder in Necropolis.
+**Step 5** : Create your mod from there! If you're using AbraxisToolset, any class that inherits from AbraxisToolset.ATMod has a few functions that call (Init will call before anything else, OnLoad will call once all other Init's have been called, Update will call every frame.)
+
+**Step 6** : Build your mod once finished, and just copy it to the "mods" folder in Necropolis.
 
 # Patching
 
