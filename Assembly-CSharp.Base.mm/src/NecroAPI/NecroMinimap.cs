@@ -42,7 +42,9 @@ namespace AbraxisToolset {
                     l.intensity = 2;
                     l.color = Color.white;
                     l.enabled = false;
+
                 }
+
                 cameraTransform = ThirdPersonCameraControl.Instance.Camera.transform;
                 Vector3 previousPosition = cameraTransform.position;
                 Quaternion previousRotation = cameraTransform.rotation;
@@ -92,8 +94,8 @@ namespace AbraxisToolset {
             }
         }
 
-        private void OnSceneLoaded(Scene newScene, LoadSceneMode mode) {
-            //hasCopied = false;
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+            hasCopied = false;
         }
 
     }

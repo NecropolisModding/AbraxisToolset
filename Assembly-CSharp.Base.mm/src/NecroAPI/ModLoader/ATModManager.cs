@@ -19,8 +19,6 @@ namespace AbraxisToolset.ModLoader {
 
         public static void LoadMods() {
 
-            IBindings globalBindings = Patches.patch_SimpleShScriptEngineFactory.GetGlobalBindings;
-
             string modPath = Directory.GetParent( Application.dataPath ).FullName;
             modPath += MOD_DATA_PATH;
 
@@ -35,11 +33,9 @@ namespace AbraxisToolset.ModLoader {
 
             //Cache the type that classes inherit from
             Type modType = typeof( ATMod );
-            Type scriptBindingType = typeof( ScriptBinding );
 
-            DebugConsole.Log( globalBindings.Count + " global bindings" );
-
-            ReflectionUtil.BindMembersByReflection( globalBindings, typeof( AbraxisToolset.ATAPIManager ), null, ReflectionUtil.CaseMode.ForceLowercase );
+            //loadedMods.Add( new TestMod() );
+            //loadedMods[0].Init();
 
             //Loop through all found .dll's
             for( int i = 0; i < modPaths.Length; i++ ) {
@@ -61,19 +57,18 @@ namespace AbraxisToolset.ModLoader {
                             //Create the mod and call Init() and OnLoad()
                             ATMod mod = (ATMod)Activator.CreateInstance( classType );
                             mod.Init();
-                            loadedMods.Add(mod);
+                            loadedMods.Add( mod );
                         }
-
-                        DebugConsole.Log( "Binding class " + classType.Name );
-                        ReflectionUtil.BindMembersByReflection( globalBindings, classType, null, ReflectionUtil.CaseMode.ForceLowercase );
                     }
-
-                    DebugConsole.Log( globalBindings.Count + " global bindings" );
                 } catch( System.Exception e ) {
                     Debug.Log( e );
                 }
 
             }
+
+            Debug.Log(loadedMods.Count + " mods loaded");
+
+            //loadedMods[0].OnLoad();
 
             foreach( ATMod mod in loadedMods ) {
                 mod.OnLoad();

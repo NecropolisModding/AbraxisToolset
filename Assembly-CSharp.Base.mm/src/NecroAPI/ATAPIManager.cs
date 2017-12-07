@@ -15,10 +15,17 @@ using HBS.Scripting.Reflection;
 namespace AbraxisToolset {
     public class ATAPIManager: MonoBehaviour {
 
+        public static bool doesInstanceExist = false;
+
         public bool hasAdded = false;
         public static DebugConsole debugConsole;
 
+        public const int baseID = 81378971;
+
         public static void Create() {
+            if( doesInstanceExist )
+                return;
+
             GameObject newObject = new GameObject();
             newObject.name = "Necropolis Mod Manager";
 
@@ -26,6 +33,9 @@ namespace AbraxisToolset {
             newObject.AddComponent<NecroMinimap>();
 
             DontDestroyOnLoad( newObject );
+
+            ATModManager.LoadMods();
+            doesInstanceExist = true;
         }
 
         public void Awake() {
@@ -34,23 +44,22 @@ namespace AbraxisToolset {
 
         public void Update() {
 
-            if( !hasAdded && LazySingletonBehavior<DebugConsole>.HasInstance ) {
-
-                LazySingletonBehavior<DebugConsole>.Instance.enabled = true;
-                debugConsole = LazySingletonBehavior<DebugConsole>.Instance;
-                DebugConsole.CaptureUnityLogs = true;
-
-                debugConsole.gameObject.AddComponent<DebugConsoleHelper>();
-                hasAdded = true;
-
-                ATModManager.LoadMods();
-
+            if(LazySingletonBehavior<DebugConsole>.HasInstance ) {
+                if( !hasAdded ) {
+                    LazySingletonBehavior<DebugConsole>.Instance.enabled = true;
+                    debugConsole = LazySingletonBehavior<DebugConsole>.Instance;
+                    DebugConsole.CaptureUnityLogs = true;
+                    debugConsole.gameObject.AddComponent<DebugConsoleHelper>();
+                    hasAdded = true;
+                }
+            } else {
+                hasAdded = false;
             }
 
-            foreach(ATMod mod in ATModManager.loadedMods ) {
+            foreach( ATMod mod in ATModManager.loadedMods ) {
                 try {
                     mod.Update();
-                } catch (System.Exception e ) {
+                } catch( System.Exception e ) {
                     Debug.LogError( e );
                 }
             }
@@ -58,7 +67,28 @@ namespace AbraxisToolset {
         }
 
         public void OnGUI() {
+            int id = 1;
 
+            if( debugConsole != null && debugConsole.mode != DebugConsole.WindowMode.Hidden) {
+
+                foreach( ATMod mod in ATModManager.loadedMods ) {
+                    try {
+                        mod.guiWindowProperties.RunGUICode( baseID + id, mod.name );
+                    } catch( System.Exception e ) {
+                        DebugConsole.Log( e.ToString() );
+                    }
+
+                    id++;
+                }
+
+            }
+
+        }
+
+        public void OnApplicationQuit() {
+            foreach( ATMod mod in ATModManager.loadedMods ) {
+                mod.OnApplicationExit();
+            }
         }
 
         public void Start() {
@@ -74,6 +104,5 @@ namespace AbraxisToolset {
         public static void ToggleMinimap() {
             NecroMinimap.displayMinimap = !NecroMinimap.displayMinimap;
         }
-
     }
 }

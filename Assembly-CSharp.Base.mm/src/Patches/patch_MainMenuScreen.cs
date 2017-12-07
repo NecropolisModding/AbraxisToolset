@@ -12,9 +12,7 @@ namespace Patches {
         private extern void orig_Awake();
         public void Awake() {
             orig_Awake();
-            AbraxisToolset.ATAPIManager.Create();
         }
-
 
     }
 }
