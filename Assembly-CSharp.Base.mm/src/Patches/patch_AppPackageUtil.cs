@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Patches {
     [MonoMod.MonoModPatch("global::Necro.AppPackageUtil")]
@@ -9,7 +10,11 @@ namespace Patches {
 
         public static extern void orig_Refresh();
         public static void Refresh() {
-            AbraxisToolset.ATAPIManager.Create();
+            try {
+                AbraxisToolset.ATAPIManager.Create();
+            } catch (System.Exception e ) {
+                Debug.LogError( e );
+            }
             orig_Refresh();
         }
 

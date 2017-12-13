@@ -11,12 +11,12 @@ namespace AbraxisToolset {
         public string name = "modname";
         public string version = "version";
 
+        public bool isEnabled = true;
+        public bool hasGUI = false;
+
         public WindowProperties guiWindowProperties;
 
-        /// <summary>
-        /// Called right after a .dll is loaded
-        /// </summary>
-        public virtual void Init() {
+        public void PreInit() {
             guiWindowProperties = new WindowProperties() {
                 id = 0,
                 isOpened = true,
@@ -24,6 +24,13 @@ namespace AbraxisToolset {
                 closedFunction = OnGUIClosed,
                 windowRect = new Rect( 15, 15, 100, 300 ),
             };
+        }
+
+        /// <summary>
+        /// Called right after a .dll is loaded
+        /// </summary>
+        public virtual void Init() {
+
         }
 
         /// <summary>
@@ -77,16 +84,29 @@ namespace AbraxisToolset {
 
         }
 
+        public void Disable() {
+            if( isEnabled == true ) {
+                isEnabled = false;
+                OnDisable();
+            }
+        }
+
+        public void Enable() {
+            if( isEnabled == false ) {
+                isEnabled = true;
+                OnEnable();
+            }
+        }
+
         public class WindowProperties {
             public int id;
             public bool isOpened;
-            public Rect windowRect;
-            private Rect closedRect;
-            public GUI.WindowFunction windowFunction;
-            public GUI.WindowFunction closedFunction;
+            public Rect windowRect = new Rect( 15, 15, 100, 300 );
+            private Rect closedRect = new Rect( 15, 15, 100, 300 );
+            public GUI.WindowFunction windowFunction = delegate (int id) { };
+            public GUI.WindowFunction closedFunction = delegate (int id) { };
 
             public void RunGUICode(int windowID, string windowName) {
-                id = windowID;
 
                 if( !isOpened ) {
                     closedRect.size = new Vector2( windowRect.width, 60 );

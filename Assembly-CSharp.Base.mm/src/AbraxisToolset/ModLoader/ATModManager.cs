@@ -16,6 +16,7 @@ namespace AbraxisToolset.ModLoader {
 
         public const string MOD_DATA_PATH = "/mods";
         public static List<ATMod> loadedMods = new List<ATMod>();
+        public static Dictionary<string, ATMod> modDictionary = new Dictionary<string, ATMod>();
 
         public static void LoadMods() {
 
@@ -28,14 +29,13 @@ namespace AbraxisToolset.ModLoader {
             }
 
             //Get all mods
-            string[] modPaths = Directory.GetFiles( modPath, "*.dll" );
+            string[] modPaths = Directory.GetFiles( modPath, "*.dll", SearchOption.AllDirectories );
             Assembly[] readMods = new Assembly[modPaths.Length];
 
             //Cache the type that classes inherit from
             Type modType = typeof( ATMod );
 
-            //loadedMods.Add( new TestMod() );
-            //loadedMods[0].Init();
+            LoadTestMod();
 
             //Loop through all found .dll's
             for( int i = 0; i < modPaths.Length; i++ ) {
@@ -52,28 +52,43 @@ namespace AbraxisToolset.ModLoader {
 
                     //Loop through types
                     foreach( Type classType in classTypes ) {
+                        Debug.Log( classType.Name + ":" + classType.BaseType );
                         //If the class inherits from the mod type
                         if( classType.BaseType == modType ) {
-                            //Create the mod and call Init() and OnLoad()
+                            //Create the mod and call PreInit() and then Init()
                             ATMod mod = (ATMod)Activator.CreateInstance( classType );
+
+                            mod.PreInit();
                             mod.Init();
+
                             loadedMods.Add( mod );
                         }
                     }
+
                 } catch( System.Exception e ) {
                     Debug.Log( e );
                 }
 
             }
 
-            Debug.Log(loadedMods.Count + " mods loaded");
+            Debug.Log( loadedMods.Count + " mods loaded" );
 
             //loadedMods[0].OnLoad();
 
             foreach( ATMod mod in loadedMods ) {
                 mod.OnLoad();
             }
+        }
 
+        private static void LoadTestMod() {
+            loadedMods.Add( new TestMod() );
+            loadedMods[0].Init();
+        }
+
+        public static void NetworkDisableMod(string modID) {
+
+        }
+        public static void NetworkEnableMod(string modID) {
 
         }
 
